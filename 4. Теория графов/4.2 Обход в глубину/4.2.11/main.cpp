@@ -5,29 +5,38 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: ifanzilka <marvin@42.fr>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/09/08 18:31:41 by ifanzilka         #+#    #+#             */
-/*   Updated: 2020/09/08 18:31:53 by ifanzilka        ###   ########.fr       */
+/*   Created: 2020/09/08 18:54:36 by ifanzilka         #+#    #+#             */
+/*   Updated: 2020/09/08 18:54:44 by ifanzilka        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <iostream>
-#include <vector>
 #define GREY 1
 #define WHITE 0
 #define BLACK 2
+#include <iostream>
+#include <vector>
+#include <algorithm>
 
 using namespace std;
 
 vector<int> used(501, 0);
 int cicle;
+int start_cicle;
+vector<int> solve(501, 0);
 
 void dfs(const vector<vector<int> >& graf, int to, int from)
 {
 	used[to] = GREY;
+	solve.push_back(to);
 	for (auto u : graf[to])
 	{
-		if (GREY == used[u] && u != from)
+		if (1 == cicle)
+			return;
+		if (GREY == used[u])
+		{
 			cicle = 1;
+			start_cicle = u;
+		}
 		else if (WHITE == used[u])
 			dfs(graf, u, to);
 	}
@@ -49,7 +58,7 @@ int main()
 	{
 		cin >> u >> v;
 		graf[u].push_back(v);
-		graf[v].push_back(u);
+        graf[v].push_back(u);
 	}
 	cicle = 0;
 	i = 0;
@@ -57,15 +66,23 @@ int main()
 	{
 		used[0] = 0;
 		for (int j = 1; j <= n; ++j)
-			used[j] = WHITE;
+			used[j] = 0;
 		dfs(graf, i, 0);
 		if (cicle)
 		{
-			cout << "YES";
+			int j = solve.size();
+			int q = 1;
+			while (solve[j - q] != start_cicle)
+				++q;
+			cout << "YES\n" << q << "\n";
+			while (q)
+			{
+				cout << solve[j - q] << " ";
+				--q;
+			}
 			return 0;
 		}
 	}
 	cout << "NO";
 	return 0;
 }
-
